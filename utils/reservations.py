@@ -273,6 +273,16 @@ def enviar_correo_confirmacion(reserva, calendar_link, citas_link):
         return False
 
 def enviar_correo_reagendacion(reserva, calendar_link, citas_link=None):
+    
+    base_url = request.host_url.rstrip('/')
+
+    # Creamos las rutas completas para el email
+    url_gif = f"{base_url}/static/gif/reagendar_cancelar.gif"
+    email_cliente = reserva.get('email')
+    # Construimos el link de gestión (ajusta la ruta /mis-citas si es diferente en tu app)
+    url_gestionar = f"{base_url}/citas?email_cliente={email_cliente}"
+    
+    
     config = cargar_config()
     empresa = config.get('empresa', 'Mi Negocio')
     smtp_conf = config.get('smtp', {})
@@ -318,22 +328,29 @@ def enviar_correo_reagendacion(reserva, calendar_link, citas_link=None):
                         </p>
                     </div>
 
-                    <div style="padding: 20px; text-align: center;">
-                        <img src="{{ url_for('static', filename='gif/reagendar_cancelar.gif', _external=True) }}" 
-                             alt="Tutorial de uso" 
-                             style="width: 100%; max-width: 350px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 4px solid white;">
-                        
-                        <div style="margin-top: 20px;">
-                            <p style="margin: 0 0 10px 0; font-size: 14px; color: #64748b; font-weight: 500;">
-                                ¿Quieres reagendar o cancelar ahora?
-                            </p>
-                            <a href="{{ url_for('admin.mis_citas', email=email_cliente, _external=True) }}" 
-                               style="color: #0ea5e9; font-size: 15px; font-weight: 800; text-decoration: none; border-bottom: 2px solid #0ea5e9; padding-bottom: 2px;">
-                                Gestionar mi cita aquí →
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<div style="margin-top: 30px; background-color: #f8fafc; border-radius: 24px; border: 1px solid #e2e8f0; overflow: hidden;">
+    <div style="padding: 12px 20px; background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; text-align: center;">
+        <p style="margin: 0; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.05em;">
+            🎥 Así reagendas o cancelas
+        </p>
+    </div>
+
+    <div style="padding: 20px; text-align: center;">
+        <img src="{url_gif}" 
+             alt="Tutorial de uso" 
+             style="width: 100%; max-width: 350px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 4px solid white;">
+        
+        <div style="margin-top: 20px;">
+            <p style="margin: 0 0 10px 0; font-size: 14px; color: #64748b; font-weight: 500;">
+                ¿Quieres reagendar o cancelar ahora?
+            </p>
+            <a href="{url_gestionar}" 
+               style="color: #0ea5e9; font-size: 15px; font-weight: 800; text-decoration: none; border-bottom: 2px solid #0ea5e9; padding-bottom: 2px;">
+                Gestionar mi cita aquí →
+            </a>
+        </div>
+    </div>
+</div>
 
 
                     <div style="margin-top:25px; padding:20px; background-color: #fff9f0; border-left: 4px solid #f59e0b; border-radius: 12px; color: #92400e;">
