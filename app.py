@@ -34,5 +34,5 @@ def reserva_exitosa():
     return render_template('reserva_exitosa.html')
 
 if __name__ == '__main__':
-    # host='0.0.0.0' permite el acceso desde tu móvil a la IP 192.168.1.65
+    
     app.run(host='0.0.0.0', port=5000, debug=True)
