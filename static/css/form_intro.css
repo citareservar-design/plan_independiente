@@ -1,0 +1,102 @@
+     /* ESTILOS DE LA INTRO */
+        #intro-screen {
+            background-image: radial-gradient(circle at 50% 50%, #e0f2fe 0%, #ffffff 70%);
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes logo-in {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+        }
+        .animate-logo-in { animation: logo-in 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        /* ESTILOS DEL FORMULARIO */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .show-content { opacity: 1 !important; }
+
+        
+
+        /* Elimina el estilo feo por defecto del select en algunos sistemas */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Mejora el aspecto de las opciones cuando el select se abre */
+select option {
+    padding: 12px;
+    background-color: white;
+    color: #0f172a; /* Slate 900 */
+}
+
+/* En navegadores modernos (Chrome/Edge), esto suaviza los bordes del menú desplegable */
+select:focus {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+/* Asegura que el logo no se encime y mantenga su proporción */
+.flex-shrink-0 {
+    flex-shrink: 0; /* Esto evita que el texto aplaste la imagen */
+}
+
+/* Estilo para que la imagen sea nítida */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    display: block;
+}
+
+/* Ajuste opcional para el hover del logo completo */
+.group:hover span.text-slate-900 {
+    color: #0ea5e9; /* Sky-500 al pasar el mouse */
+}
+
+
+
+/* el cargar la reserva */
+
+.spinner-border {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #f1f5f9;
+    border-top: 3px solid #0ea5e9;
+    border-radius: 50%;
+    animation: spinAgendApp 0.8s linear infinite;
+}
+
+@keyframes spinAgendApp {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* Para que el scroll se vea limpio en móvil */
+  .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }

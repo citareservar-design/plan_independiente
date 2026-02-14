@@ -1,0 +1,35 @@
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #020617;
+            background-image: radial-gradient(circle at 50% -20%, #1e293b, #020617);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Tarjeta Neon High-Clarity */
+        .neon-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 2px solid #22d3ee;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+            border-radius: 2.5rem;
+        }
+
+        /* Solución para notas largas */
+        .break-words {
+            word-break: break-word; /* Rompe palabras largas */
+            overflow-wrap: break-word;
+            display: block;
+            line-height: 1.5;
+        }
+
+        /* Scrollbar estética para notas muy largas */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #22d3ee;
+            border-radius: 10px;
+        }

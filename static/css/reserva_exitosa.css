@@ -1,0 +1,19 @@
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc; /* Gris muy claro y limpio */
+            background-image: radial-gradient(circle at top right, #e2e8f0, #f8fafc);
+        }
+
+        .neon-border {
+            border: 2px solid #22d3ee;
+            box-shadow: 0 10px 30px -10px rgba(34, 211, 238, 0.4);
+        }
+
+        .icon-bounce {
+            animation: bounce-subtle 2s infinite;
+        }
+
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }

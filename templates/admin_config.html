@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Configuración - ΛgendΛpp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>.
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='ico/ico.ico') }}" type="image/x-icon">
+
+</head>
+<body class="bg-slate-50 min-h-screen pb-20">
+    <nav class="bg-white border-b border-slate-200 px-6 py-4 mb-8 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-bold text-slate-800">ΛgendΛpp | Configuración</h1>
+        <a href="{{ url_for('admin.logout') }}" class="text-red-500 font-medium text-sm flex items-center gap-1">
+            <i class="fa-solid fa-right-from-bracket"></i> Salir
+        </a>
+    </nav>
+
+    <main class="max-w-2xl mx-auto px-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="mb-6 p-4 rounded-2xl bg-green-100 text-green-700 border border-green-200 font-bold text-center">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-700">
+                    <i class="fa-solid fa-shop text-sky-500"></i> Información General
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 ml-2">NOMBRE DE LA EMPRESA</label>
+                        <input type="text" name="empresa" value="{{ config.empresa }}" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-sky-500 transition-all font-bold">
+                    </div>
+<div>
+    <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest">
+        WhatsApp (Con código de país)
+    </label>
+    <div class="relative group">
+        <input type="text" 
+               name="whatsapp" 
+               id="whatsapp_config"
+               value="{{ config.whatsapp }}" 
+               placeholder="Ej: 573001234567" 
+               maxlength="12"
+               inputmode="numeric"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 focus:bg-white transition-all font-bold text-slate-900">
+    </div>
+    <p class="text-[9px] text-slate-400 mt-1 ml-2">Máximo 12 dígitos (Ej: 57 para Colombia + número)</p>
+</div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 ml-2">EMAIL DEL ADMINISTRADOR (PARA COPIAS)</label>
+                        <input type="email" name="email_admin" value="{{ config.email_admin }}" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-sky-500 transition-all font-bold">
+                    </div>
+                </div>
+            </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+    <h2 class="text-lg font-bold mb-2 flex items-center gap-2 text-slate-700">
+        <i class="fa-solid fa-hand-sparkles text-sky-500"></i> Servicios y Duración
+    </h2>
+    
+    <div class="mb-6 p-3 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+        <p class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest flex items-center gap-1">
+            <i class="fa-solid fa-circle-info text-sky-500"></i> Guía rápida de tiempos
+        </p>
+        <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600">60m = 1h</span>
+            <span class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600">120m = 2h</span>
+            <span class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600">180m = 3h</span>
+            <span class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600">240m = 4h</span>
+        </div>
+    </div>
+
+    <div id="contenedor-servicios" class="space-y-6">
+        </div>
+</div>
+    <div id="contenedor-servicios" class="space-y-6"> {% for nombre, duracion in config.servicios.items() %}
+        <div class="flex flex-col p-4 bg-slate-50/50 rounded-2xl border border-slate-100 group">
+            <div class="flex gap-3 items-center">
+                <div class="flex-1">
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Nombre del Servicio</label>
+                    <input type="text" name="srv_nombre[]" value="{{ nombre }}" placeholder="Ej: Uñas Acrílicas" 
+                           class="w-full p-3 bg-white border-2 border-slate-100 rounded-xl text-sm font-bold focus:border-sky-400 outline-none transition-all">
+                </div>
+                
+                <div class="w-24">
+                    <label class="text-[9px] font-black text-slate-400 uppercase text-center mb-1 block">Minutos</label>
+                    <input type="number" 
+                           name="srv_duracion[]" 
+                           value="{{ duracion }}" 
+                           placeholder="0" 
+                           oninput="actualizarReloj(this)"
+                           class="w-full p-3 bg-white border-2 border-sky-200 rounded-xl text-sm font-black text-center text-sky-600 outline-none focus:border-sky-500 transition-all">
+                </div>
+
+                <button type="button" onclick="this.closest('.flex-col').remove()" class="mt-5 text-slate-300 hover:text-red-500 p-2 transition-colors">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+
+            <div class="mt-3 flex items-center">
+                <div class="visor-tiempo bg-sky-500 text-white px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest shadow-sm shadow-sky-200">
+                    <i class="fa-regular fa-clock mr-1"></i>
+                    <span class="texto-horas">{{ (duracion // 60) }}h {{ (duracion % 60) }}min</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <button type="button" onclick="agregarServicio()" class="mt-6 w-full py-4 border-2 border-dashed border-sky-200 text-sky-500 rounded-2xl font-bold hover:bg-sky-50 hover:border-sky-400 transition-all">
+        + Añadir Nuevo Servicio
+    </button>
+</div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-700">
+                    <i class="fa-solid fa-envelope text-sky-500"></i> Configuración de Correo
+                </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input type="text" name="smtp_server" value="{{ config.get('smtp', {}).get('server', '') }}" placeholder="Servidor SMTP" class="...">
+    <input type="number" name="smtp_port" value="{{ config.get('smtp', {}).get('port', 587) }}" placeholder="Puerto" class="...">
+    <input type="email" name="smtp_email" value="{{ config.get('smtp', {}).get('email', '') }}" placeholder="Correo" class="...">
+    <input type="password" name="smtp_password" value="{{ config.get('smtp', {}).get('password', '') }}" placeholder="Contraseña" class="...">
+</div>
+            </div>
+
+<div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <h2 class="text-lg font-bold flex items-center gap-2 text-slate-700">
+                <i class="fa-solid fa-clock text-sky-500"></i> Horarios Base
+            </h2>
+        </div>
+        <button type="button" onclick="rellenarHorarios()" 
+                class="bg-sky-50 hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 border border-sky-100 shadow-sm">
+            <i class="fa-solid fa-magic-wand-sparkles"></i> Horarios Sugeridos
+        </button>
+    </div>
+
+    <div class="mb-6 p-3 bg-sky-50/50 rounded-2xl border border-dashed border-sky-100">
+        <p class="text-[9px] font-black text-sky-600 uppercase mb-2 tracking-widest flex items-center gap-1">
+            <i class="fa-solid fa-right-left"></i> Guía rápida Formato 24h a PM
+        </p>
+        <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
+            <div class="bg-white px-2 py-1 rounded-lg border border-sky-50 text-center">
+                <span class="block text-[8px] text-slate-400 font-bold uppercase">13:00</span>
+                <span class="text-[10px] font-black text-sky-600">1 PM</span>
+            </div>
+            <div class="bg-white px-2 py-1 rounded-lg border border-sky-50 text-center">
+                <span class="block text-[8px] text-slate-400 font-bold uppercase">15:00</span>
+                <span class="text-[10px] font-black text-sky-600">3 PM</span>
+            </div>
+            <div class="bg-white px-2 py-1 rounded-lg border border-sky-50 text-center">
+                <span class="block text-[8px] text-slate-400 font-bold uppercase">18:00</span>
+                <span class="text-[10px] font-black text-sky-600">6 PM</span>
+            </div>
+            <div class="bg-white px-2 py-1 rounded-lg border border-sky-50 text-center">
+                <span class="block text-[8px] text-slate-400 font-bold uppercase">20:00</span>
+                <span class="text-[10px] font-black text-sky-600">8 PM</span>
+            </div>
+            <div class="bg-white px-2 py-1 rounded-lg border border-sky-50 text-center">
+                <span class="block text-[8px] text-slate-400 font-bold uppercase">21:00</span>
+                <span class="text-[10px] font-black text-sky-600">9 PM</span>
+            </div>
+        </div>
+    </div>
+
+    <p class="text-[10px] text-slate-400 mb-3 px-2 uppercase font-black tracking-widest">
+        Separa las horas con comas (Ej: 08:00, 13:30, 18:00)
+    </p>
+    
+    <textarea name="horarios" id="area-horarios" rows="4" 
+              placeholder="08:00, 10:00, 14:00..."
+              class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 focus:bg-white transition-all font-bold text-slate-600 resize-none">{{ config.horarios_base | join(', ') }}</textarea>
+</div>
+
+
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-700">
+        <i class="fa-solid fa-utensils text-sky-500"></i> Horario de Almuerzo
+    </h2>
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="text-xs font-bold text-slate-400">INICIO ALMUERZO</label>
+            <input type="time" name="almuerzo_inicio" value="{{ config.almuerzo.inicio }}" class="w-full p-3 bg-slate-50 border rounded-xl font-bold">
+        </div>
+        <div>
+            <label class="text-xs font-bold text-slate-400">FIN ALMUERZO</label>
+            <input type="time" name="almuerzo_fin" value="{{ config.almuerzo.fin }}" class="w-full p-3 bg-slate-50 border rounded-xl font-bold">
+        </div>
+    </div>
+</div>
+
+<div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mt-4">
+    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-700">
+        <i class="fa-solid fa-door-closed text-sky-500"></i> Fin de Jornada
+    </h2>
+    <div>
+        <label class="text-xs font-bold text-slate-400">HORA DE SALIDA (CIERRE)</label>
+        <input type="time" name="hora_cierre" value="{{ config.hora_cierre }}" class="w-full p-3 bg-slate-50 border rounded-xl font-bold">
+        <p class="text-[10px] text-slate-400 mt-2">El sistema no permitirá citas que terminen después de esta hora.</p>
+    </div>
+</div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-700">
+                    <i class="fa-solid fa-lock text-sky-500"></i> Clave del Panel
+                </h2>
+                <input type="password" name="admin_password" placeholder="Escribe una nueva clave solo si quieres cambiarla" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-sky-500 transition-all font-bold">
+            </div>
+
+            <button type="submit" class="w-full bg-sky-500 text-white py-5 rounded-3xl font-bold shadow-xl shadow-sky-100 hover:bg-sky-600 active:scale-[0.98] transition-all text-lg">
+                🚀 Guardar Toda la Configuración
+            </button>
+        </form>
+    </main>
+
+      <script src="{{ url_for('static', filename='js/admin_config.js') }}"></script>
+
+</body>
+</html>

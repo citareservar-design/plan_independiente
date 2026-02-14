@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ΛgendΛpp | Administrador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='ico/ico.ico') }}" type="image/x-icon">
+
+    <script src="{{ url_for('static', filename='js/admin_agenda.js') }}" defer></script>
+</head>
+<body class="pb-32 bg-gray-100 min-h-screen text-slate-800">
+
+    <header class="max-w-5xl mx-auto px-6 pt-10 pb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="text-center md:text-left">
+            <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">Panel de Control</h1>
+            <p class="text-sky-500 font-bold tracking-widest mt-1 text-sm uppercase">Gestión de Agenda</p>
+        </div>
+        <div class="bg-white border border-sky-100 shadow-sm px-6 py-2 rounded-full text-sky-600 text-xs font-black uppercase tracking-widest">
+            {{ citas|length }} Citas Pendientes
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-4 mb-8">
+    <div class="relative group">
+        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass text-sky-400 group-focus-within:text-sky-600 transition-colors"></i>
+        </div>
+        <input type="text" id="buscador-citas" 
+               placeholder="Buscar por nombre del cliente..." 
+               class="w-full pl-12 pr-6 py-4 bg-white border-2 border-slate-100 rounded-[2rem] shadow-sm outline-none focus:border-sky-500 focus:shadow-md transition-all font-bold text-slate-700 placeholder:text-slate-300">
+        
+        <div id="status-busqueda" class="hidden absolute right-4 top-1/2 -translate-y-1/2 bg-sky-50 text-sky-600 text-[10px] font-black px-3 py-1 rounded-full uppercase">
+            0 encontrados
+        </div>
+    </div>
+</div>
+
+    <main class="max-w-6xl mx-auto px-4 md:px-6 space-y-12 mt-8">
+        
+        {# MACRO PARA LAS TARJETAS #}
+        {% macro render_card(cita) %}
+        <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-md transition-all">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                
+                <div class="bg-sky-50 text-sky-600 px-6 py-4 rounded-[2rem] text-center min-w-[110px] border border-sky-100">
+                    <span class="block text-[9px] font-black text-sky-400 uppercase tracking-widest mb-1">Hora</span>
+                    <span class="text-2xl font-black italic tracking-tighter">{{ cita.hora_formato_12 }}</span>
+                </div>
+
+                <div class="flex-1 text-center sm:text-left min-w-0">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tighter mb-2 truncate">
+                        {{ cita.nombre }}
+                    </h2>
+                    <div class="flex flex-wrap justify-center sm:justify-start items-center gap-3">
+                        <span class="bg-slate-900 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase">
+                            {{ cita.tipo_una }}
+                        </span>
+                        <span class="text-slate-400 font-bold text-sm">
+                            <i class="fa-solid fa-phone mr-1 text-sky-400"></i> {{ cita.telefono }}
+                        </span>
+                    </div>
+                </div>
+
+                
+
+<div class="flex sm:flex-col gap-3">
+<button onclick="enviarWhatsApp('{{ cita.telefono }}', '{{config.empresa}}', '{{ cita.nombre }}', '{{ cita.tipo_una }}', '{{ cita.date }}', '{{ cita.hora }}')" 
+        class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all active:scale-90">
+    <i class="fa-brands fa-whatsapp text-2xl"></i>
+</button>
+
+<button onclick="reagendarAdmin('{{ cita.timestamp }}', '{{ cita.tipo_una }}')" 
+        class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center hover:bg-sky-600 hover:text-white transition-all active:scale-90">
+    <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+</button>
+
+    <button onclick="copiarResumen('{{ cita.nombre }}', '{{ cita.hora }}', '{{ cita.tipo_una }}', '{{ cita.date }}')" 
+            title="Copiar resumen"
+            class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center hover:bg-slate-600 hover:text-white transition-all active:scale-90">
+        <i class="fa-solid fa-copy text-xl"></i>
+    </button>
+    
+    <button onclick="confirmarEliminar('{{ cita.timestamp }}')" 
+            class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 border border-rose-100 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all active:scale-90">
+        <i class="fa-solid fa-trash-can text-xl"></i>
+    </button>
+</div>
+            </div>
+
+            {% if cita.notes %}
+            <div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <p class="text-slate-500 text-xs italic">"{{ cita.notes }}"</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endmacro %}
+
+        <section>
+            <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-xl font-black text-slate-800 uppercase tracking-tighter">Hoy</h2>
+                <div class="h-[2px] flex-1 bg-sky-100"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {% set citas_hoy = citas | selectattr("date", "equalto", hoy) | list %}
+                {% if citas_hoy %}
+                    {% for cita in citas_hoy %} {{ render_card(cita) }} {% endfor %}
+                {% else %}
+                    <div class="lg:col-span-2 text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                        <p class="text-slate-400 font-bold uppercase text-xs tracking-widest">Libre para hoy</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-xl font-black text-slate-400 uppercase tracking-tighter">Mañana</h2>
+                <div class="h-[2px] flex-1 bg-slate-200"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {% set citas_manana = citas | selectattr("date", "equalto", manana) | list %}
+                {% if citas_manana %}
+                    {% for cita in citas_manana %} {{ render_card(cita) }} {% endfor %}
+                {% else %}
+                    <div class="lg:col-span-2 text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                        <p class="text-slate-400 font-bold uppercase text-xs tracking-widest">Sin citas para mañana</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white px-10 py-4 rounded-full border border-slate-200 shadow-xl flex items-center gap-12 z-50">
+        <a href="{{ url_for('appointment.form') }}" class="text-slate-400 hover:text-sky-500 transition-all flex flex-col items-center">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-[8px] font-black uppercase mt-1">Inicio</span>
+        </a>
+        <div class="w-[1px] h-6 bg-slate-200"></div>
+        <a href="{{ url_for('admin.agenda') }}" class="text-sky-500 flex flex-col items-center">
+            <i class="fa-solid fa-calendar-check text-xl"></i>
+            <span class="text-[8px] font-black uppercase mt-1">Agenda</span>
+        </a>
+    </nav>
+
+    
+    <div id="loader-agendapp" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 2147483647; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif;">
+    
+    <div style="position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+        <div class="agendapp-spinner"></div>
+        <div style="position: absolute; font-size: 32px; font-weight: 900; color: #0ea5e9; font-family: 'Inter', sans-serif;">A</div>
+    </div>
+
+    <div style="margin-top: 25px; text-align: center;">
+        <h2 style="color: #0f172a; margin: 0; font-size: 18px; font-weight: 800; letter-spacing: 1px;">AGENDAPP</h2>
+        <p id="loader-msg" style="color: #64748b; font-size: 14px; margin-top: 5px;">Procesando...</p>
+    </div>
+
+    <div style="width: 180px; height: 4px; background: #f1f5f9; border-radius: 10px; margin-top: 20px; overflow: hidden;">
+        <div id="progress-bar" style="width: 0%; height: 100%; background: #0ea5e9; transition: width 0.4s ease;"></div>
+    </div>
+</div>
+
+<style>
+.agendapp-spinner {
+    width: 70px; /* Un poco más grande para que la A respire */
+    height: 70px;
+    border: 4px solid #f1f5f9;
+    border-top: 4px solid #0ea5e9;
+    border-radius: 50%;
+    animation: spinAgendApp 1s linear infinite;
+}
+
+@keyframes spinAgendApp { 
+    to { transform: rotate(360deg); } 
+}
+</style>
+
+</body>
+      <script src="{{ url_for('static', filename='js/admin_agenda.js') }}"></script>
+
+</html>

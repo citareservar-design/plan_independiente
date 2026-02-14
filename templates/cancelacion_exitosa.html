@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Cita Cancelada | ΛgendΛpp</title>
+    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='ico/ico.ico') }}" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap");
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background-color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+
+    <main class="flex-1 flex items-center justify-center p-6 mt-16 w-full max-w-md">
+        <div class="bg-white p-10 rounded-[3rem] text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-2 border-rose-100 w-full">
+            
+            <div class="relative inline-block mb-8">
+                <div class="absolute inset-0 bg-rose-400 rounded-full blur-2xl opacity-10"></div>
+                <div class="bg-rose-50 w-24 h-24 rounded-full flex items-center justify-center border-2 border-rose-100 relative text-rose-500">
+                    <i class="fa-solid fa-calendar-xmark text-4xl"></i>
+                </div>
+            </div>
+            
+            <h1 class="text-3xl font-black tracking-tighter mb-4 text-slate-900 uppercase">
+                Cita Cancelada
+            </h1>
+            
+            <p class="text-slate-500 font-medium leading-relaxed mb-10">
+                Tu reserva ha sido eliminada correctamente.
+            </p>
+            
+            <div class="space-y-4">
+                <a class="block w-full bg-slate-900 text-white font-black py-4 px-8 rounded-2xl hover:bg-[#0ea5e9] transition-all duration-300 transform active:scale-95 shadow-lg uppercase text-xs tracking-widest text-center" 
+                   href="{{ url_for('appointment.form') }}">
+                    Volver a Agendar
+                </a>
+                
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] pt-4">
+                    <a href="https://agendapp.co">ΛgendΛpp</a>  ● 2025
+                </p>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

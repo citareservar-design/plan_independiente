@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - ΛgendΛpp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='ico/ico.ico') }}" type="image/x-icon">
+
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border border-slate-100 text-center">
+        <div class="bg-sky-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-lock text-sky-600 text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-slate-800">Panel de Control</h1>
+        <p class="text-slate-500 mb-8">Ingresa la clave maestra</p>
+
+        <form method="POST" class="space-y-6 text-left">
+            <div class="relative">
+                <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="password" name="password" placeholder="Contraseña de administrador" required
+                    class="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 transition-all font-bold text-slate-900">
+            </div>
+            <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-sky-200 transition-all">
+                Acceder al Panel
+            </button>
+        </form>
+    </div>
+</body>
+</html>

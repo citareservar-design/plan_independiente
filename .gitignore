@@ -1,0 +1,6 @@
+.venv/
+.vscode/
+__pycache__/
+.Basic_AgendApp/
+.plan_medium/
+..env

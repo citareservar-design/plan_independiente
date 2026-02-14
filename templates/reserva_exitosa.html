@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reserva Exitosa | AgendApp</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='ico/ico.ico') }}"
+      type="image/x-icon"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/reserva_exitosa.css') }}"
+    />
+  </head>
+  <body
+    class="min-h-screen flex items-center justify-center p-6 text-slate-800"
+  >
+    <main class="w-full max-w-md relative">
+      <div
+        class="bg-white p-10 rounded-[3rem] text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] neon-border"
+      >
+        <div class="relative inline-block mb-8 icon-bounce">
+          <div
+            class="absolute inset-0 bg-cyan-400 rounded-full blur-2xl opacity-20"
+          ></div>
+          <div
+            class="bg-cyan-50 w-24 h-24 rounded-full flex items-center justify-center border-2 border-cyan-100 relative"
+          >
+            <i class="fas fa-check text-cyan-500 text-4xl"></i>
+          </div>
+        </div>
+
+        <h1 class="text-4xl font-black tracking-tighter mb-4 text-slate-900">
+          ¡LISTO!
+        </h1>
+
+        <div class="space-y-4 mb-10 text-slate-500 font-medium leading-relaxed">
+          <p>
+            Tu cita en
+            <span
+              class="text-slate-900 font-extrabold underline decoration-cyan-400 decoration-2"
+              >{{config.empresa}}</span
+            >
+            ha sido confirmada.
+          </p>
+          <p class="text-sm">
+            Enviamos los detalles a tu
+            <span class="text-cyan-600 font-bold">correo</span>. No olvides
+            revisar la carpeta de spam.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <a
+            class="block w-full bg-slate-900 text-white font-black py-4 px-8 rounded-2xl hover:bg-cyan-500 transition-all duration-300 transform active:scale-95 shadow-lg shadow-slate-200 uppercase text-xs tracking-widest"
+            href="{{ url_for('appointment.form') }}"
+          >
+            Agendar otra cita
+          </a>
+
+          <p
+            class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] pt-4"
+          >
+            <a href="https://agendapp.co">AgendApp </a
+            ><span class="text-cyan-400">●</span> 2025
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/reserva_exitosa.js') }}"></script>
+  </body>
+</html>

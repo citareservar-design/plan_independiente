@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ΛgendΛpp | Panel de Citas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='ico/ico.ico') }}" type="image/x-icon">
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brand: { 50: "#f0f9ff", 100: "#e0f2fe", 200: "#bae6fd", 500: "#0ea5e9", 600: "#0284c7", 700: "#0369a1" },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", sans-serif; }
+      .fade-up { transform: translateY(20px); opacity: 0; animation: fadeUpAnim 0.5s forwards; }
+      @keyframes fadeUpAnim { to { transform: translateY(0); opacity: 1; } }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-50 dark:bg-gray-950 transition-colors duration-500 flex flex-col items-center px-4 py-10">
+    
+    <nav class="fixed top-0 left-0 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm py-3 z-50 border-b border-blue-100 dark:border-slate-800">
+      <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+         <a
+            href="{{ url_for('appointment.form') }}"
+            class="flex items-center gap-3 hover:opacity-80 transition-all active:scale-95 group"
+          >
+            <div
+              class="flex-shrink-0 w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center p-1 border border-sky-100 shadow-sm"
+            >
+              <img
+                src="{{ url_for('static', filename='img/logo_company.png') }}"
+                alt="Logo"
+                class="w-full h-full object-contain"
+              />
+            </div>
+
+            <div class="flex flex-col justify-center leading-none">
+              <span class="text-xl font-black text-slate-900 tracking-tighter">
+                Λgend<span class="text-sky-500">Λpp</span>
+              </span>
+              <span
+                class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1"
+              >
+                Reserva Online
+              </span>
+            </div>
+          </a>
+        <a href="{{ url_for('appointment.form') }}" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-black uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95 border border-slate-200 dark:border-slate-700">
+            Volver
+        </a>
+      </div>
+    </nav>
+
+    <div class="h-20"></div>
+
+<div class="w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-6 md:p-8 border border-slate-200 dark:border-slate-800">
+    <h1 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white text-center mb-2 fade-up tracking-tighter">Mis Citas Agendadas</h1>
+    <p class="text-slate-500 dark:text-slate-400 text-center text-sm mb-8 fade-up font-medium">Gestiona tus citas de forma rápida y sencilla.</p>
+
+    <form method="POST" action="{{ url_for('appointment.citas') }}" class="bg-blue-50/50 dark:bg-slate-800/40 p-5 md:p-6 rounded-2xl border border-blue-100 dark:border-slate-700 mb-10 fade-up">
+        <label class="block text-[10px] font-black text-blue-600 dark:text-brand-500 uppercase tracking-[0.2em] mb-3">Tu Email de Registro</label>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <input type="email" name="email_cliente" required value="{{ email_buscado or '' }}" placeholder="nombre@correo.com"
+                class="flex-1 px-4 py-3 rounded-xl border border-blue-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:border-brand-500 outline-none transition-all font-medium" />
+            <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all shadow-lg shadow-brand-500/20 active:scale-95">Buscar</button>
+        </div>
+    </form>
+
+    {% if citas_cliente is defined and citas_cliente is not none %}
+        {% if citas_cliente|length > 0 %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 fade-up">
+                {% for cita in citas_cliente %}
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="px-3 py-1 bg-blue-100 dark:bg-brand-500/20 text-blue-700 dark:text-brand-400 text-[10px] font-black rounded-lg uppercase tracking-tighter border border-blue-200 dark:border-brand-500/30">
+                            {{ cita.tipo_una }}
+                        </span>
+                        <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{{ cita.duracion }} MIN</span>
+                    </div>
+
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center text-slate-800 dark:text-slate-200">
+                            <svg class="w-5 h-5 mr-3 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-base font-bold">{{ cita.date }}</span>
+                        </div>
+                        <div class="flex items-center text-slate-600 dark:text-slate-400">
+                            <svg class="w-5 h-5 mr-3 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-lg font-black">{{ cita.hora_formato_12 }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <button onclick="prepararReagendar('{{ cita.timestamp }}', '{{ cita.tipo_una }}')" 
+                                class="w-full bg-sky-500 hover:bg-sky-600 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest transition-all active:scale-95 shadow-lg shadow-sky-500/20">
+                            Reagendar
+                        </button>
+                        <button onclick="confirmarCancelacion('{{ cita.timestamp }}')" 
+                                class="w-full py-2 text-red-500 hover:text-red-700 text-[10px] font-black uppercase tracking-widest transition-colors">
+                            Cancelar Cita
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-16 px-6 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 fade-up">
+                <div class="mb-4 flex justify-center">
+                    <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-full">
+                        <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 font-medium">No hay citas registradas para <br><span class="text-brand-600 font-black">{{ email_buscado }}</span></p>
+            </div>
+        {% endif %} 
+    {% endif %}
+</div>
+
+    <script src="{{ url_for('static', filename='js/citas.js') }}"></script>
+
+<div id="loader-agendapp" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 2147483647; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif;">
+    
+    <div style="position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+        <div class="agendapp-spinner"></div>
+        <div style="position: absolute; font-size: 32px; font-weight: 900; color: #0ea5e9; font-family: 'Inter', sans-serif;">A</div>
+    </div>
+
+    <div style="margin-top: 25px; text-align: center;">
+        <h2 style="color: #0f172a; margin: 0; font-size: 18px; font-weight: 800; letter-spacing: 1px;">AGENDAPP</h2>
+        <p id="loader-msg" style="color: #64748b; font-size: 14px; margin-top: 5px;">Procesando...</p>
+    </div>
+
+    <div style="width: 180px; height: 4px; background: #f1f5f9; border-radius: 10px; margin-top: 20px; overflow: hidden;">
+        <div id="progress-bar" style="width: 0%; height: 100%; background: #0ea5e9; transition: width 0.4s ease;"></div>
+    </div>
+</div>
+
+<style>
+.agendapp-spinner {
+    width: 70px; /* Un poco más grande para que la A respire */
+    height: 70px;
+    border: 4px solid #f1f5f9;
+    border-top: 4px solid #0ea5e9;
+    border-radius: 50%;
+    animation: spinAgendApp 1s linear infinite;
+}
+
+@keyframes spinAgendApp { 
+    to { transform: rotate(360deg); } 
+}
+</style>
+  </body>
+</html>
